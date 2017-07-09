@@ -3,6 +3,8 @@ package com.deppon.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+
 @DatabaseTable(tableName="tb_user")
 public class User {
 	@DatabaseField(generatedId=true)
@@ -17,6 +19,10 @@ public class User {
 	private String num;
 	@DatabaseField(columnName="usersex")
 	private int sex;
+	@DatabaseField(columnName="userdate")
+	private Date userdate;
+	@DatabaseField(columnName="userdatelong")
+	private long userdatelong;
 
 	
 	public int getId() {
@@ -55,9 +61,34 @@ public class User {
 	public void setSex(int sex) {
 		this.sex = sex;
 	}
-	
 
-	
-	
+	public Date getUserdate() {
+		return userdate;
+	}
 
+	public void setUserdate(Date userdate) {
+		this.userdate = userdate;
+	}
+
+	public long getUserdatelong() {
+		return userdatelong;
+	}
+
+	public void setUserdatelong(long userdatelong) {
+		this.userdatelong = userdatelong;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", desc='" + desc + '\'' +
+				", infor=" + infor +
+				", num='" + num + '\'' +
+				", sex=" + sex +
+				", userdate=" + userdate +
+				", userdatelong=" + userdatelong +
+				'}';
+	}
 }

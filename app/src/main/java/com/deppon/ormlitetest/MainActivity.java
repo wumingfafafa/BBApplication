@@ -1,12 +1,6 @@
 package com.deppon.ormlitetest;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -16,11 +10,18 @@ import android.widget.Toast;
 import com.deppon.bean.Infor;
 import com.deppon.bean.User;
 import com.deppon.dao.DaoUtils;
-import com.deppon.helper.DatabaseHelper;
 import com.deppon.helper.MyDatabaseHelper;
 import com.deppon.ormlitetest.DatabaseUtils.MessageShow;
-import com.example.ormlitetest.R;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
+import bb.pluto.com.bbapplication.R;
 
 public class MainActivity extends Activity {
 	private User user;
@@ -31,11 +32,14 @@ public class MainActivity extends Activity {
 	private String DB_PATH="/data/data/com.example.ormlitetest/databases/test88.db";
 	private String DB_BACKUP_PATH=Environment.getExternalStorageDirectory()+"/feng_contactsBackup";
 	private String DATABASE_PATH=Environment.getExternalStorageDirectory() + "/ttttest.db";
+//	private String DATABASE_PATH="/data/data/com.example.ormlitetest/databases/jjjjb.db";
 	private DatabaseUtils bru;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		String aa="";
+		aa = DATABASE_PATH;
 	   helper = new MyDatabaseHelper(MainActivity.this,DATABASE_PATH);
 	   bru=new DatabaseUtils(MainActivity.this);
 	   bru.setDatabasePath(helper, DATABASE_PATH,2);
@@ -48,41 +52,44 @@ public class MainActivity extends Activity {
 			userDao = new DaoUtils<User>(helper, User.class);
 			inforDao = new DaoUtils<Infor>(helper, Infor.class);
 
-			userDao.executeSql("delete from tb_user");
+//			userDao.executeSql("delete from tb_user");
 
 			// infor与user为多对一的关系
 			Infor infor = new Infor();
 			infor.setDetile("你好啊");
 
 			// 一次插入一条数据
-			// User user = new User();
-			// user.setName("lisi");
-			// user.setDesc("老师");
-			// user.setPassword("999999");
-			// user.setInfor(infor);
-			// userDao.insertData(user);
+			 User user = new User();
+			 user.setName("lisi");
+			 user.setDesc("老师");
+//			 user.setPassword("999999");
+			 user.setInfor(infor);
+			 userDao.insertData(user);
 
 			// 一次插入多条数据
-			List<User> userList = new ArrayList<User>();
-			for (int i = 0; i < 500; i++) {
-				// 外键对象需要在创建当前引用对象之前创建，并且需要在外键对象所对应的表中插入该外键对象信息记录
-				// infor为外键对象，user与infor为一一对应的关系
-				// Infor infor = new Infor();
-				// infor.setDetile("你好啊");
-				// inforDao.insertData(infor);
-
-				user = new User();
-				user.setName("zhangsan" + i);
-				user.setDesc("xueshen");
-				user.setNum("123456"+i);
-				user.setSex(1);
-				// user.setInfor(infor);
-				userList.add(user);
-				
-			}
+//			List<User> userList = new ArrayList<User>();
+//			for (int i = 0; i < 10; i++) {
+//				// 外键对象需要在创建当前引用对象之前创建，并且需要在外键对象所对应的表中插入该外键对象信息记录
+//				// infor为外键对象，user与infor为一一对应的关系
+//				// Infor infor = new Infor();
+//				// infor.setDetile("你好啊");
+//				// inforDao.insertData(infor);
+//				Thread.sleep(1000);
+//				user = new User();
+//				user.setName("zhangsan" + i);
+//				user.setDesc("xueshen");
+//				user.setNum("123456"+i);
+//				user.setSex(1);
+//				Date date = new Date();
+//				user.setUserdate(date);
+//				user.setUserdatelong(date.getTime());
+//				// user.setInfor(infor);
+//				userList.add(user);
+//
+//			}
 
 			// Long stime= System.currentTimeMillis();
-			userDao.insertDatas(userList);
+//			userDao.insertDatas(userList);
 			// Long etime=System.currentTimeMillis();
 			// Log.e("ORMLite_time", etime-stime+"");
 
@@ -141,7 +148,35 @@ public class MainActivity extends Activity {
 			// clause.put("name", "zhangsan0");
 			// List<User> users=userDao.queryDataEqByClause(clause);
 			// User user=users.get(0);
+			List<User> users=userDao.queryAllData();
+			for(User us:users){
+				System.out.println(us.toString());
+			}
+			// 条件查询
+			 Map<String,Object> clause=new HashMap<String,Object>();
 
+			Date date = new Date(Long.valueOf("1499572228132"));
+//			user.setUserdate(date);
+//			 clause.put("userdate", "zhangsan0");
+			 clause.put("userdatelong", date);
+			 List<User> users0=userDao.queryDataEqByClause(clause);
+			if(users0!=null&&users0.size()>0) {
+				User user0 = users0.get(0);
+				System.out.println("============"+user0.toString());
+			}
+			List<User> users1=userDao.getDao().queryBuilder().where().gt("userdatelong", "1499572228132").query();
+			if(users1!=null&&users1.size()>0) {
+				for(User user1 : users1) {
+					System.out.println("=======---=====" + user1.toString());
+				}
+			}
+
+			List<User> users2=userDao.getDao().queryBuilder().where().gt("userdate", date).query();
+			if(users2!=null&&users2.size()>0) {
+				for(User user2 : users2) {
+					System.out.println("=======+++=====" + user2.toString());
+				}
+			}
 			// 使用SQL查询
 			// List<String[]> datas = userDao
 			// .queryDataBySql("select * from tb_user ");
@@ -165,7 +200,7 @@ public class MainActivity extends Activity {
 			// userDao.delectDatas(list2);
 
 			
-			bru.doDataBackUp(DB_PATH, DB_BACKUP_PATH,new MessageShow() {
+			bru.doDataBackUp(DATABASE_PATH, DB_BACKUP_PATH,new MessageShow() {
 				
 				@Override
 				public void onSuccess() {

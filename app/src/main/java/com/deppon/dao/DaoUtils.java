@@ -1,5 +1,11 @@
 package com.deppon.dao;
 
+import com.deppon.helper.DatabaseHelper;
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.support.DatabaseConnection;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -8,12 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import com.deppon.helper.DatabaseHelper;
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.GenericRawResults;
-import com.j256.ormlite.support.DatabaseConnection;
 
 /**
  * @ClassName: DaoUtils
@@ -52,7 +52,14 @@ public class DaoUtils<T> {
 
 	}
 
-	/*
+	public Dao<T, Integer> getDao() {
+		return dao;
+	}
+
+	public void setDao(Dao<T, Integer> dao) {
+		this.dao = dao;
+	}
+/*
 	 * *************新增数据方法*********************************
 	 */
 
