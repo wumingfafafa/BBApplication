@@ -15,6 +15,7 @@ import com.deppon.ormlitetest.DatabaseUtils.MessageShow;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,15 @@ public class MainActivity extends Activity {
 	   bru=new DatabaseUtils(MainActivity.this);
 	   bru.setDatabasePath(helper, DATABASE_PATH,2);
 
-       
+
+		Calendar yesteday = Calendar.getInstance();
+		yesteday.add(Calendar.DATE, -1);
+
+		Calendar today = Calendar.getInstance();
+		today.add(Calendar.DATE, 0);
+
+		Calendar tommorrow = Calendar.getInstance();
+		tommorrow.add(Calendar.DATE, 1);
 	
 		TextView tv = (TextView) findViewById(R.id.tv);
 
@@ -67,26 +76,30 @@ public class MainActivity extends Activity {
 			 userDao.insertData(user);
 
 			// 一次插入多条数据
-//			List<User> userList = new ArrayList<User>();
-//			for (int i = 0; i < 10; i++) {
-//				// 外键对象需要在创建当前引用对象之前创建，并且需要在外键对象所对应的表中插入该外键对象信息记录
-//				// infor为外键对象，user与infor为一一对应的关系
-//				// Infor infor = new Infor();
-//				// infor.setDetile("你好啊");
-//				// inforDao.insertData(infor);
-//				Thread.sleep(1000);
-//				user = new User();
-//				user.setName("zhangsan" + i);
-//				user.setDesc("xueshen");
-//				user.setNum("123456"+i);
-//				user.setSex(1);
+			List<User> userList = new ArrayList<User>();
+			for (int i = 0; i < 10; i++) {
+				// 外键对象需要在创建当前引用对象之前创建，并且需要在外键对象所对应的表中插入该外键对象信息记录
+				// infor为外键对象，user与infor为一一对应的关系
+				// Infor infor = new Infor();
+				// infor.setDetile("你好啊");
+				// inforDao.insertData(infor);
+				Thread.sleep(1000);
+				user = new User();
+				user.setName("zhangsan" + i);
+				user.setDesc("xueshen");
+				user.setNum("123456"+i);
+				user.setSex(1);
 //				Date date = new Date();
 //				user.setUserdate(date);
 //				user.setUserdatelong(date.getTime());
-//				// user.setInfor(infor);
-//				userList.add(user);
-//
-//			}
+//				user.setUserdate(yesteday.getTime());
+//				user.setUserdatelong(yesteday.getTimeInMillis());
+				user.setUserdate(tommorrow.getTime());
+				user.setUserdatelong(tommorrow.getTimeInMillis());
+				// user.setInfor(infor);
+				userList.add(user);
+
+			}
 
 			// Long stime= System.currentTimeMillis();
 //			userDao.insertDatas(userList);
@@ -177,6 +190,13 @@ public class MainActivity extends Activity {
 					System.out.println("=======+++=====" + user2.toString());
 				}
 			}
+			List<User> users3=userDao.getDao().queryBuilder().where().between("userdate", yesteday.getTime(),today.getTime()).query();
+			if(users3!=null&&users3.size()>0) {
+				for(User user3 : users3) {
+					System.out.println("=======()()()=====" + user3.toString());
+				}
+			}
+
 			// 使用SQL查询
 			// List<String[]> datas = userDao
 			// .queryDataBySql("select * from tb_user ");
